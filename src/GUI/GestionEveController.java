@@ -11,6 +11,9 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -39,14 +42,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 
 /**
  * FXML Controller class
@@ -55,6 +62,7 @@ import javafx.scene.layout.AnchorPane;
  */
 public class GestionEveController implements Initializable {
 
+     
     @FXML
     private TableView<Evenement> tEvenement;
     @FXML
@@ -68,7 +76,7 @@ public class GestionEveController implements Initializable {
     @FXML
     private TableColumn<?, ?> etatEve;
     @FXML
-    private TableColumn<?, ?> placeEve;
+    private TableColumn<Evenement,Integer> placeEve;
     @FXML
     private TableColumn<Evenement,Double> prixEve;
     
@@ -105,12 +113,24 @@ public class GestionEveController implements Initializable {
     private TableColumn<?, ?> desc;
     @FXML
     private AnchorPane anchor;
-    @FXML
     private JFXTextField jImage;
     @FXML
     private JFXTextField idEve;
     @FXML
     private JFXTextField recherchelabel;
+    @FXML
+    private Button ajouter;
+    @FXML
+    private Button fileChooser;
+    @FXML
+    private ImageView imageView1;
+    
+    @FXML
+     private Button retour ;
+    
+    FileChooser fc = new FileChooser () ;
+    File selectedFile ; 
+       
   
 
     /**
@@ -126,6 +146,8 @@ public class GestionEveController implements Initializable {
        supprimer.setDisable(true);
        anchor.setDisable(true);
        search();
+        
+       
        
        
        
@@ -172,12 +194,15 @@ public class GestionEveController implements Initializable {
                 Date dateE = rs.getDate("dateEvenement");
                 String destinationE = rs.getString("destination"); 
                 String descriptionE = rs.getString("description") ; 
+               
                 String dureeE = rs.getString("duree");
                 String typeE = rs.getString("type");
                 String etatE = rs.getString("etat");
-                int nombreE = rs.getInt("nombrePlace") ;
-                float prixEve = rs.getFloat("prix") ;
-                data.add(new Evenement(id_e,nomE,dateE,destinationE,typeE,dureeE,descriptionE,etatE,nombreE,prixEve));
+                Integer nombreE ;
+                nombreE = rs.getInt("nombrePlace");
+                float prixEvee ;
+                prixEvee = rs.getFloat("prix");
+                data.add(new Evenement(id_e,nomE,dateE,destinationE,typeE,dureeE,descriptionE,etatE,nombreE,prixEvee));
                 System.out.println("recup table view ok !");
             }
             conn.close();
@@ -194,11 +219,10 @@ public class GestionEveController implements Initializable {
         destEve.setCellValueFactory(new PropertyValueFactory<>("destination"));
         TypeEve.setCellValueFactory(new PropertyValueFactory<>("type"));
         duree.setCellValueFactory(new PropertyValueFactory<>("duree"));
-        
         desc.setCellValueFactory(new PropertyValueFactory<>("description"));
         etatEve.setCellValueFactory(new PropertyValueFactory<>("etat"));
-        placeEve.setCellValueFactory(new PropertyValueFactory<>("nombrePlace"));
-        prixEve.setCellValueFactory(new PropertyValueFactory<>("prix"));
+        placeEve.setCellValueFactory(new PropertyValueFactory<>("Nombres Places"));
+        prixEve.setCellValueFactory(new PropertyValueFactory<>("Prix"));
     }
       
       private void setcellValue() {
@@ -213,9 +237,12 @@ public class GestionEveController implements Initializable {
                 jType.setText(pl.getType());
                 etats.setText(pl.getEtat());
                 jnbr.setText(Integer.toString(pl.getNbrPlaces()));
-                jprix.setText(Double.toString(pl.getPrix()));
+                jprix.setText(Float.toString(pl.getPrix()));
                 jDesc.setText(pl.getDescription()) ; 
                 jDuree.setText(pl.getDuree());
+               
+            
+                
                 
                 
                 modifier.setDisable(false);
@@ -269,7 +296,15 @@ public class GestionEveController implements Initializable {
     }
 
     @FXML
-    private void updateAction(ActionEvent event) throws SQLException {
+    private void updateAction(ActionEvent event) throws SQLException, FileNotFoundException {
+       
+        
+        
+           
+            
+        
+        String iii = selectedFile.getAbsolutePath();
+        
         int idE = Integer.parseInt(idEve.getText());
         String nomE = (jNom.getText());
         Date datefe = (Date.valueOf(date.getValue()));
@@ -278,7 +313,7 @@ public class GestionEveController implements Initializable {
         String typeE = jType.getText(); 
         String etatE = etats.getText() ; 
         String descE = jDesc.getText(); 
-        String image = jImage.getText(); 
+        String image = iii ; 
         float prixE = Float.parseFloat(jprix.getText());
         int nbrP = Integer.parseInt(jnbr.getText()) ;
         Evenement even = new Evenement();
@@ -339,4 +374,47 @@ public class GestionEveController implements Initializable {
                 jDuree.setText(ev.getDuree());
     }
      
-}}
+}
+
+    @FXML
+    private void Ajout(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(("Ajout.fxml")));
+                Parent root = loader.load();
+                AjoutController ajout = loader.getController();
+                ajout.setNom("bb");
+                Scene scene = jDuree.getScene();
+                
+                scene.setRoot(root);
+        
+    }
+
+    @FXML
+    private void filaAction(ActionEvent event) throws FileNotFoundException {
+         
+        fc.setInitialDirectory(new File("C:\\Users\\boussandel\\branche2\\Desktop\\images"));
+       selectedFile = fc.showOpenDialog(null);
+        
+        if (selectedFile!= null ) {
+            FileInputStream input = new FileInputStream(selectedFile);
+            Image image = new Image(input);
+            imageView1.setImage(image);
+    }
+        else {
+            lbl12.setText("Aucun fichier n'est selctionnée !! ");
+        }
+    }
+
+    @FXML
+    private void fileChouserAction() throws FileNotFoundException {
+        
+            /*FileInputStream input = new FileInputStream(new File(iimage.getText()));
+            Image image = new Image(input);
+            imageView1.setImage(image);*/
+    }
+
+    @FXML
+    private void mettreImages(MouseEvent event) {
+    }
+
+   
+}

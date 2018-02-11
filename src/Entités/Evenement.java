@@ -94,7 +94,22 @@ public class Evenement {
        this.description=descriptionE ; 
        this.etat=etatE ; 
        this.nbrPlaces=nombreE; 
+       this.prix=prixEve; 
+    }
+
+    public Evenement(int id_e, String nomE, Date dateE, String destinationE, String typeE, String dureeE, String descriptionE, String etatE, String imageE, int nombreE, float prixEve) {
+       this.idEvenement=id_e ; 
+       this.nomEvenement=nomE ; 
+       this.dateEvenement=dateE ; 
+       this.destination=destinationE; 
+       this.type=typeE ; 
+       this.duree=dureeE ; 
+       this.description=descriptionE ; 
+       this.etat=etatE ; 
+       this.image=imageE ; 
+       this.nbrPlaces=nombreE; 
        this.prix=prix; 
+       
     }
     
    
@@ -183,8 +198,8 @@ public class Evenement {
         this.id_user = id_user;
     }
 
-    public double getPrix() {
-        return prix;
+    public float getPrix() {
+        return (float) prix;
     }
 
     public void setPrix(double prix) {

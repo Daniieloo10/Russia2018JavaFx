@@ -9,6 +9,7 @@ package pi_Test;
 import Entités.EvaluationEvenement;
 import Entités.Evenement;
 import Entités.Participation;
+import Entités.User;
 import IServices.IEvenement; 
 
 
@@ -19,6 +20,7 @@ import IServices.IEvenement;
  */
 import Services.EvenementServices;
 import Services.ParticipationServices;
+import Services.UserService;
 import java.sql.Date;
 
 public class Pi {
@@ -51,8 +53,14 @@ public class Pi {
         //evs.ajouter_Evaluation(ee);
        
 
-                   
-        
+           User u = new  User("nom","prenom","email","password","telephone","nationalite","role","login") ; 
+           Services.UserService us = new UserService(); 
+           us.add(u);
+          // us.delete(1);
+            //us.findById(1);
+            us.getAll();
+            us.authentication("dhia", "dhia") ;
+            
         
        
        

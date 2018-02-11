@@ -36,7 +36,8 @@ import javafx.scene.image.ImageView;
  * @author boussandel
  */
 public class AjoutController implements Initializable {
-
+ 
+    private String bb ; 
     @FXML
     private TextField textNom;
     @FXML
@@ -126,5 +127,11 @@ Evenement ev = new Evenement(nomEvenement, Description, dateev, dureeEvenement, 
     private void annulerEvenement(ActionEvent event) {
         
     }
+    
+    public void setNom (String nom ) {
+        this.bb=nom ; 
+    }
+    
+    
     
 }
